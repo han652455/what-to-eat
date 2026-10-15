@@ -397,7 +397,11 @@ function render(){
 
 /* ========== 1. 菜谱（两层） ========== */
 function renderCook(){
-  let h = '<div class="sect">搜索（跨分类）</div><div class="card" style="padding:11px 12px">' +
+  let h = '<div class="sect">批量导入（自动分类）</div><div class="card">' +
+    '<textarea id="gBatch" placeholder="一行一道菜，粘贴进来&#10;红烧肉&#10;清炒白菜&#10;番茄蛋汤&#10;麻辣火锅"></textarea>' +
+    '<div class="row" style="margin-top:10px"><button class="btn primary grow" data-act="gBatchAdd">导入并自动分类</button></div>' +
+    '<div class="hint">粘贴多行菜名，程序会自动判断荤 / 素 / 汤 / 大锅菜等分类；导入后进入各分类可改错的。</div></div>';
+  h += '<div class="sect">搜索（跨分类）</div><div class="card" style="padding:11px 12px">' +
     '<input id="cookSearch" type="text" placeholder="搜菜名，例如：红烧肉" value="' + esc(cookSearch) + '" /></div>';
   h += '<div id="cookResults"></div>';
   $('#v-cook').innerHTML = h;
@@ -439,11 +443,6 @@ function renderCookCat(){
   });
   h += '</div></div>';
 
-  h += '<div class="sect">批量导入到「' + cookCat + '」</div><div class="card">' +
-    '<textarea id="ckbatch" placeholder="一行一道菜，粘贴进来&#10;红烧肉&#10;清炒白菜"></textarea>' +
-    '<div class="row" style="margin-top:10px"><button class="btn primary grow" data-act="ckBatchAdd">批量导入</button></div>' +
-    '<div class="hint">这里导入的菜会直接归入「' + cookCat + '」分类。</div></div>';
-
   h += '<div class="sect">单条新增到「' + cookCat + '」</div><div class="card"><div class="row">' +
     '<input id="cksingle" type="text" placeholder="输入一道菜名" class="grow" />' +
     '<button class="btn primary" data-act="ckSingleAdd">添加</button></div></div>';
@@ -482,6 +481,23 @@ function addMain(names, cat){
   if(!save()){ added.forEach(it=>{ const i=S.main.indexOf(it); if(i>=0) S.main.splice(i,1); }); }
   if(view === 'cookcat') renderCookCat(); else renderCook();
   toast(n ? '导入 ' + n + ' 道' : '都已在库里');
+}
+function addMainGlobal(names){
+  const list = names.map(n=>n.trim()).filter(Boolean);
+  if(!list.length){ toast('先输入菜名'); return; }
+  const cnt = {};
+  let n = 0; const added = [];
+  list.forEach(name=>{
+    if(S.main.some(x=>x.name === name)) return;
+    const cat = guess(name);
+    const it = {id:uid(), name:name, cat:cat, ex:false};
+    S.main.push(it); added.push(it); n++;
+    cnt[cat] = (cnt[cat]||0) + 1;
+  });
+  if(!save()){ added.forEach(it=>{ const i=S.main.indexOf(it); if(i>=0) S.main.splice(i,1); }); }
+  renderCook();
+  const bd = CATS.filter(c=>cnt[c]).map(c=>c + ' ' + cnt[c]).join(' · ');
+  toast(n ? ('已导入 ' + n + ' 道' + (bd ? ('：' + bd) : '')) : '都已在库里');
 }
 function openEditDish(id){
   const it = S.main.find(x=>x.id === id); if(!it) return;
@@ -948,7 +964,7 @@ document.addEventListener('click', e=>{
       if(!confirm('删除这道菜？')) return;
       S.main = S.main.filter(x=>x.id!==id); sel.delete(id); save(); renderCookCat();
     },
-    ckBatchAdd(){ addMain(($('#ckbatch').value||'').split('\n'), cookCat); $('#ckbatch').value=''; },
+    gBatchAdd(){ addMainGlobal(($('#gBatch').value||'').split('\n')); },
     ckSingleAdd(){ const i=$('#cksingle'); addMain([i.value], cookCat); i.value=''; },
     editDish(){ openEditDish(id); },
     saveDish(){ saveDish(); },

@@ -55,12 +55,11 @@ function boot(preset) {
   });
 }
 
-/* 通过 UI 播种数据 */
+/* 通过 UI 播种数据（走首页全局批量导入自动分类） */
 async function seedMain(ctx, names) {
   ctx.goTab('cook');
-  ctx.click(ctx.$('[data-act="openCat"][data-cat="荤菜"]'));
-  ctx.setVal('ckbatch', names.join('\n'));
-  ctx.act('ckBatchAdd');
+  ctx.setVal('gBatch', names.join('\n'));
+  ctx.act('gBatchAdd');
 }
 async function seedBrk(ctx, names) {
   ctx.goTab('gen');
@@ -130,19 +129,39 @@ t('A', '首页跨分类搜索命中并点开弹窗编辑', async (c) => {
   assert(c.$('#sheet').classList.contains('on'), '应打开编辑弹窗');
   assert(!!c.$('#dName') && !!c.$('#dCat'), '弹窗应有菜名与分类');
 });
-t('A', '二级页批量导入到当前分类', async (c) => {
+t('A', '首页全局批量导入并自动分类（覆盖全部 6 类）', async (c) => {
   c.goTab('cook');
-  c.click(c.$('[data-act="openCat"][data-cat="素菜"]'));
-  c.setVal('ckbatch', '黄瓜\n茄子');
-  c.act('ckBatchAdd');
+  assert(!!c.$('#gBatch'), '首页应有批量导入输入框');
+  assert(!!c.byAct('gBatchAdd'), '首页应有导入按钮');
+  c.setVal('gBatch', '红烧肉\n清炒白菜\n番茄蛋汤\n银耳莲子羹\n麻辣火锅\n青椒炒肉');
+  c.act('gBatchAdd');
   const s = c.state();
-  assert(s.main.filter(x => x.cat === '素菜').length === 2, '素菜应有 2 道, got ' + s.main.filter(x => x.cat === '素菜').length);
+  assert(s.main.length === 6, '应导入 6 道, got ' + s.main.length);
+  assert(s.main.some(x => x.name === '红烧肉' && x.cat === '荤菜'), '红烧肉应在荤菜');
+  assert(s.main.some(x => x.name === '清炒白菜' && x.cat === '素菜'), '清炒白菜应在素菜');
+  assert(s.main.some(x => x.name === '番茄蛋汤' && x.cat === '咸汤'), '番茄蛋汤应在咸汤');
+  assert(s.main.some(x => x.name === '银耳莲子羹' && x.cat === '甜汤'), '银耳莲子羹应在甜汤');
+  assert(s.main.some(x => x.name === '麻辣火锅' && x.cat === '大锅菜'), '麻辣火锅应在大锅菜');
+  assert(s.main.some(x => x.name === '青椒炒肉' && x.cat === '半荤半素'), '青椒炒肉应在半荤半素');
 });
-t('A', '二级页单条新增 / 批量删除 / 临时排除', async (c) => {
+t('A', '分类详情页已移除批量导入组件', async (c) => {
   c.goTab('cook');
   c.click(c.$('[data-act="openCat"][data-cat="荤菜"]'));
-  c.setVal('ckbatch', '排骨\n牛肉');
-  c.act('ckBatchAdd');
+  assert(!c.$('#ckbatch'), '分类页不应再有 ckbatch 输入框');
+  assert(!c.$('[data-act="ckBatchAdd"]'), '分类页不应再有 ckBatchAdd 按钮');
+});
+t('A', '分类详情页仍支持单条新增到当前分类', async (c) => {
+  c.goTab('cook');
+  c.click(c.$('[data-act="openCat"][data-cat="荤菜"]'));
+  c.setVal('cksingle', '糖醋里脊');
+  c.act('ckSingleAdd');
+  const s = c.state();
+  assert(s.main.some(x => x.name === '糖醋里脊' && x.cat === '荤菜'), '单条新增应归入荤菜');
+});
+t('A', '二级页单条新增 / 批量删除 / 临时排除', async (c) => {
+  await seedMain(c, ['排骨', '牛肉']);
+  c.goTab('cook');
+  c.click(c.$('[data-act="openCat"][data-cat="荤菜"]'));
   c.act('exMode');
   c.click(c.$('#v-cookcat .ritem .nm'));
   assert(c.state().main.filter(x => x.ex).length === 1, '应临时排除 1 道');
@@ -325,10 +344,7 @@ t('G', '冰箱临时抽取（不入库）', async (c) => {
   assert(c.state().main.length === 0, '冰箱不应写入正式库');
 });
 t('G', '大锅菜模式抽一口当整餐', async (c) => {
-  c.goTab('cook');
-  c.click(c.$('[data-act="openCat"][data-cat="大锅菜"]'));
-  c.setVal('ckbatch', '麻辣火锅');
-  c.act('ckBatchAdd');
+  await seedMain(c, ['麻辣火锅']);
   c.goTab('gen'); c.goView('gmain');
   c.click(c.$('#v-gmain #mMode button[data-m="pot"]'));
   c.act('genMain');
