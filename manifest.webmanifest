@@ -1,0 +1,19 @@
+{
+  "name": "今天吃什么",
+  "short_name": "吃什么",
+  "description": "随手记录、一键生成、可回溯、可迁移的家庭饮食小助手",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F6F1E9",
+  "theme_color": "#5C6B7A",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

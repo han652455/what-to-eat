@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FBEAD9"/>
+      <stop offset="1" stop-color="#F3DFC9"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <!-- 碗 -->
+  <path d="M132 250 h248 a124 96 0 0 1 -248 0 Z" fill="#9E3B44"/>
+  <path d="M132 250 h248 a124 96 0 0 1 -248 0 Z" fill="#B5484F" opacity="0.35"/>
+  <ellipse cx="256" cy="250" rx="124" ry="22" fill="#F7F0E7" stroke="#9E3B44" stroke-width="10"/>
+  <!-- 筷子 -->
+  <rect x="300" y="120" width="14" height="150" rx="7" transform="rotate(20 307 195)" fill="#6B9AC4"/>
+  <rect x="338" y="120" width="14" height="150" rx="7" transform="rotate(20 345 195)" fill="#6B9AC4"/>
+  <!-- 热气 -->
+  <path d="M210 195 q14 -22 0 -44 q-14 -22 0 -44" fill="none" stroke="#C9A227" stroke-width="9" stroke-linecap="round" opacity="0.8"/>
+  <path d="M280 195 q14 -22 0 -44 q-14 -22 0 -44" fill="none" stroke="#C9A227" stroke-width="9" stroke-linecap="round" opacity="0.8"/>
+  <!-- 小叶子 -->
+  <path d="M256 300 q-34 -10 -40 -44 q34 6 40 44 Z" fill="#6E8F5A"/>
+</svg>
