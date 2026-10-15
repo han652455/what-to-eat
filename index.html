@@ -22,15 +22,16 @@ body{
   background:var(--bg); color:var(--text); font-size:15px; line-height:1.5;
   -webkit-font-smoothing:antialiased; transition:background .3s,color .3s;
 }
-body.hasbg{background-image:var(--bgimg);background-size:cover;background-position:center center;background-attachment:fixed}
+#bgLayer{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center center;background-attachment:fixed;transition:opacity .3s;background-image:none}
+body.hasbg #app{background:transparent}
 body.hasbg .card{background:color-mix(in srgb,var(--card) 86%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 body.hasbg .tabbar{background:color-mix(in srgb,var(--card2) 80%,transparent)}
-#app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative}
+#app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:1;background:var(--bg)}
 
 .hdr{position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;
   padding:calc(env(safe-area-inset-top,0px) + 14px) 16px 12px;
   background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);}
+  border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent)}
 .hdr .htxt{flex:1;min-width:0}
 .hdr .title{font-size:17px;font-weight:600;letter-spacing:.3px}
 .hdr .sub{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase}
@@ -52,10 +53,10 @@ main{flex:1;padding:14px 16px calc(var(--tabh) + var(--safe) + 20px)}
 .stat b{display:block;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
 .stat span{font-size:11px;color:var(--muted)}
 
-textarea,input[type=text],input[type=number]{width:100%;border:1px solid var(--line);background:var(--card2);color:var(--text);
+textarea,input[type=text],input[type=number],select{width:100%;border:1px solid var(--line);background:var(--card2);color:var(--text);
   border-radius:var(--rs);padding:10px 12px;font-size:14px;font-family:inherit;outline:none;resize:vertical}
 textarea{min-height:74px;line-height:1.6}
-textarea:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accSoft)}
+textarea:focus,input:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--accSoft)}
 ::placeholder{color:var(--muted);opacity:.8}
 .row{display:flex;gap:9px;align-items:center}
 .grow{flex:1;min-width:0}
@@ -85,7 +86,7 @@ textarea:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--ac
 .nm{font-size:14.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .nm.ex{color:var(--muted);text-decoration:line-through}
 .nm.tap{cursor:pointer}
-.catsel{font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:9px;padding:4px 4px;max-width:88px;font-family:inherit}
+.catsel{font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:9px;padding:4px;max-width:88px;font-family:inherit}
 .mini{width:28px;height:28px;border-radius:9px;border:1px solid var(--line);background:var(--card);color:var(--muted);display:grid;place-items:center;cursor:pointer;flex:none;padding:0}
 .mini:active{transform:scale(.92)}
 .mini svg{width:15px;height:15px}
@@ -121,7 +122,7 @@ textarea:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--ac
 .chip b{font-weight:600;cursor:pointer;opacity:.75}
 
 .result{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;box-shadow:var(--sh);margin-bottom:var(--gap)}
-.result .rh{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.result .rh{display:flex;align-items:baseline;gap:8px;margin-bottom:8px;flex-wrap:wrap}
 .result .rt{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--acc)}
 .result .rd{font-size:11.5px;color:var(--muted);margin-left:auto}
 .result .rg{font-size:11.5px;color:var(--muted);margin:9px 0 4px;font-weight:600}
@@ -131,7 +132,7 @@ textarea:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--ac
 .outmsg{font-size:15px;color:var(--acc);font-weight:600;padding:6px 0}
 
 .hcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:13px;box-shadow:var(--sh);margin-bottom:10px}
-.hcard .hh{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.hcard .hh{display:flex;align-items:center;gap:7px;margin-bottom:7px;flex-wrap:wrap}
 .hcard .hd{font-size:11.5px;color:var(--muted)}
 .hcard .ha{margin-left:auto;display:flex;gap:6px}
 .hline{font-size:13.5px;color:var(--text);word-break:break-all}
@@ -177,9 +178,23 @@ textarea:focus,input:focus{border-color:var(--acc);box-shadow:0 0 0 3px var(--ac
 .tcard .tn{font-size:12.5px;margin-top:7px}
 .tcard .ts2{font-size:11px;color:var(--muted)}
 hr.sep{border:none;border-top:1px solid var(--line);margin:13px 0}
+
+.catgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.catcard{border:1px solid var(--line);border-radius:var(--rs);padding:12px 8px;text-align:center;background:var(--card2);cursor:pointer}
+.catcard:active{transform:scale(.97)}
+.catico{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;margin:0 auto 6px}
+.catico svg{width:20px;height:20px}
+.catn{font-size:13.5px;font-weight:600}
+.catc{font-size:11px;color:var(--muted);margin-top:1px}
+.hscroll{display:flex;gap:8px;overflow-x:auto;padding:2px 0;-webkit-overflow-scrolling:touch}
+.hscroll::-webkit-scrollbar{display:none}
+.hscroll .pill{flex:none;font-size:12.5px}
+.floatbar{position:sticky;top:0;z-index:6;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:8px 0;margin:-2px 0 10px}
+.probv{font-variant-numeric:tabular-nums;font-weight:600;min-width:42px;text-align:right;color:var(--acc);font-size:13px}
 </style>
 </head>
 <body>
+<div id="bgLayer"></div>
 <div id="app">
   <header class="hdr">
     <button class="tile" id="backBtn" style="display:none" aria-label="返回"></button>
@@ -192,9 +207,11 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:13px 0}
 
   <main>
     <section class="view" id="v-cook"></section>
+    <section class="view" id="v-cookcat"></section>
     <section class="view" id="v-gen"></section>
     <section class="view" id="v-gmain"></section>
     <section class="view" id="v-gbrk"></section>
+    <section class="view" id="v-brkman"></section>
     <section class="view" id="v-hist"></section>
     <section class="view" id="v-set"></section>
   </main>
@@ -212,6 +229,7 @@ const SOUPS = ['甜汤','咸汤'];
 const KEY = 'w2e_v3';
 const uid = () => Math.random().toString(36).slice(2,9);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const STATE_LABEL = {normal:'', out:'外出', takeout:'外卖', light:'简餐', skip:'不吃', snack:'零食'};
 
 /* ========== 主题 ========== */
 const TH = [
@@ -243,8 +261,9 @@ function applyTheme(){
   const r = document.documentElement.style;
   ['--bg','--card','--card2','--text','--muted','--line','--acc','--accSoft','--accText'].forEach((k,i)=> r.setProperty(k, p[i]));
   const bg = localStorage.getItem('w2e_bg_' + t.id);
-  if(bg){ document.body.classList.add('hasbg'); r.setProperty('--bgimg', 'url(' + bg + ')'); }
-  else { document.body.classList.remove('hasbg'); r.setProperty('--bgimg','none'); }
+  const bl = $('#bgLayer');
+  if(bg){ document.body.classList.add('hasbg'); if(bl){ bl.style.backgroundImage = 'url(' + bg + ')'; bl.style.opacity = (typeof S.cfg.bgOpacity === 'number' ? S.cfg.bgOpacity : 1); } }
+  else { document.body.classList.remove('hasbg'); if(bl){ bl.style.backgroundImage = 'none'; bl.style.opacity = 1; } }
   const mt = document.querySelector('meta[name=theme-color]'); if(mt) mt.setAttribute('content', p[0]);
 }
 function resolveDark(){
@@ -258,13 +277,27 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', ()=
 /* ========== 数据 ========== */
 function def(){
   return { main:[], brk:[], hist:[],
-    cfg:{ theme:'red', mode:'auto', forceOn:true, force:['豆浆','鸡蛋'], outProb:10, lastMain:null, lastBrk:null } };
+    cfg:{ theme:'red', mode:'auto', forceOn:true, force:['豆浆','鸡蛋'],
+      bProbs:{out:10, takeout:0, snack:0, skip:0},
+      mProbs:{out:0, takeout:0, light:0, skip:0},
+      bgOpacity:1, lastMain:null, lastBrk:null } };
 }
-let S = load();
+let S, _migrated = false;
 function load(){
-  try{ const r = JSON.parse(localStorage.getItem(KEY)); if(r && r.main) return Object.assign(def(), r, {cfg:Object.assign(def().cfg, r.cfg||{})}); }catch(e){}
+  try{
+    const r = JSON.parse(localStorage.getItem(KEY));
+    if(r && r.main){
+      const s = Object.assign(def(), r, {cfg:Object.assign(def().cfg, r.cfg||{})});
+      if(r.cfg && typeof r.cfg.outProb === 'number' && !r.cfg.bProbs){ s.cfg.bProbs = Object.assign(def().cfg.bProbs, {out:r.cfg.outProb}); _migrated = true; }
+      if(!s.cfg.bProbs) s.cfg.bProbs = def().cfg.bProbs;
+      if(!s.cfg.mProbs) s.cfg.mProbs = def().cfg.mProbs;
+      if(typeof s.cfg.bgOpacity !== 'number'){ s.cfg.bgOpacity = 1; _migrated = true; }
+      return s;
+    }
+  }catch(e){}
   return def();
 }
+S = load();
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); return true; }catch(e){ toast('保存失败，存储空间可能已满'); return false; } }
 
 /* ========== 分类识别 ========== */
@@ -299,17 +332,23 @@ const ICO = {
 let view = 'cook';
 let sel = new Set(), bsel = new Set(), exMode = false;
 let histMode = 'cal', histFilter = 'all';
+let cookSearch = '', cookCat = '荤菜';
 const now = new Date();
 let calY = now.getFullYear(), calM = now.getMonth(), calSel = null;
-let editRec = null;
+let editRec = null, editDish = null;
 let fridgeRes = null, mainRes = null, brkRes = null;
 
-const SUB = { cook:['菜谱','正餐菜谱库'], gen:['生成','选一个板块'], gmain:['正餐','普通随机 / 大锅菜'], gbrk:['早餐','食材库 / 生成'], hist:['历史','日历 · 列表'], set:['设置','外观 · 数据'] };
+const SUB = {
+  cook:['菜谱','分类'], cookcat:['菜谱','分类'], gen:['生成','选一个板块'],
+  gmain:['正餐','普通随机 / 大锅菜'], gbrk:['早餐','生成 / 设置'], brkman:['早餐','食材管理'],
+  hist:['历史','日历 · 列表'], set:['设置','外观 · 数据']
+};
 const TABS = [
   {id:'cook', n:'菜谱', key:'cook'},
   {id:'gen',  n:'生成', key:'dice'},
   {id:'hist', n:'历史', key:'cal'}
 ];
+const BACK = {gmain:'gen', gbrk:'gen', cookcat:'cook', brkman:'gbrk'};
 
 /* ========== 通用 UI ========== */
 function toast(m){ const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast._t); toast._t = setTimeout(()=>t.classList.remove('on'), 1800); }
@@ -325,7 +364,7 @@ function tileBg(i){
 }
 function renderTabs(){
   $('#tabs').innerHTML = TABS.map((x,i)=>{
-    const on = (view === x.id) || (x.id === 'gen' && (view === 'gmain' || view === 'gbrk'));
+    const on = (view === x.id) || (x.id==='gen' && (view==='gmain'||view==='gbrk'||view==='brkman')) || (x.id==='cook' && view==='cookcat');
     return '<button data-act="go" data-v="' + x.id + '" class="' + (on?'on':'') + '"><span class="tt" style="background:' + tileBg(i) + '">' + ICO[x.key] + '</span>' + x.n + '</button>';
   }).join('');
 }
@@ -335,7 +374,8 @@ function go(v){
   $('#v-' + v).classList.add('on');
   const s = SUB[v] || ['',''];
   $('#hTitle').textContent = s[0]; $('#hSub').textContent = s[1];
-  $('#backBtn').style.display = (v === 'gmain' || v === 'gbrk') ? 'grid' : 'none';
+  $('#backBtn').style.display = (v in BACK) ? 'grid' : 'none';
+  $('#backBtn').dataset.back = BACK[v] || 'gen';
   $('#setBtn').style.display = (v === 'set') ? 'none' : 'grid';
   window.scrollTo(0,0);
   render();
@@ -346,64 +386,134 @@ function render(){
   $('#backBtn').innerHTML = ICO.back;
   renderTabs();
   if(view === 'cook') renderCook();
+  else if(view === 'cookcat') renderCookCat();
   else if(view === 'gen') renderGen();
   else if(view === 'gmain') renderMain();
   else if(view === 'gbrk') renderBrk();
+  else if(view === 'brkman') renderBrkMan();
   else if(view === 'hist') renderHist();
   else if(view === 'set') renderSet();
 }
 
-/* ========== 1. 菜谱 ========== */
+/* ========== 1. 菜谱（两层） ========== */
 function renderCook(){
-  let h = '<div class="stats">' + CATS.map(c =>
-    '<div class="stat"><b>' + S.main.filter(x=>x.cat===c).length + '</b><span>' + c + '</span></div>').join('') + '</div>';
+  let h = '<div class="sect">搜索（跨分类）</div><div class="card" style="padding:11px 12px">' +
+    '<input id="cookSearch" type="text" placeholder="搜菜名，例如：红烧肉" value="' + esc(cookSearch) + '" /></div>';
+  h += '<div id="cookResults"></div>';
+  $('#v-cook').innerHTML = h;
+  renderCookResults();
+}
+function renderCookResults(){
+  const box = $('#cookResults'); if(!box) return;
+  if(cookSearch.trim()){
+    const q = cookSearch.trim();
+    const matches = S.main.filter(x => x.name.indexOf(q) >= 0);
+    let h = '<div class="sect">搜索结果 · ' + matches.length + '</div><div class="card" style="padding:10px 12px">';
+    if(!matches.length) h += empty('没有匹配的菜');
+    else matches.forEach(x=>{
+      h += '<div class="ritem" data-act="editDish" data-id="' + x.id + '">' +
+        '<span class="nm tap">' + esc(x.name) + '</span><span class="tag plain">' + x.cat + '</span></div>';
+    });
+    h += '</div>';
+    box.innerHTML = h;
+  } else {
+    let h = '<div class="sect">分类（点进去管理）</div><div class="card" style="padding:12px"><div class="catgrid">';
+    CATS.forEach(c=>{
+      const n = S.main.filter(x=>x.cat===c).length;
+      h += '<div class="catcard" data-act="openCat" data-cat="' + c + '">' +
+        '<div class="catico" style="background:' + tileBg(0) + '">' + ICO.cook + '</div>' +
+        '<div class="catn">' + c + '</div><div class="catc">' + n + ' 道</div></div>';
+    });
+    h += '</div></div>';
+    box.innerHTML = h;
+  }
+}
+function openCat(el){
+  cookCat = el.dataset.cat;
+  if(view !== 'cookcat') go('cookcat'); else renderCookCat();
+}
+function renderCookCat(){
+  let h = '<div class="floatbar"><div class="hscroll">';
+  CATS.forEach(c=>{
+    h += '<button class="pill ' + (c===cookCat?'on':'') + '" data-act="openCat" data-cat="' + c + '">' + c + '</button>';
+  });
+  h += '</div></div>';
 
-  h += '<div class="sect">批量导入</div><div class="card">' +
-    '<textarea id="batch" placeholder="一行一道菜，粘贴进来批量导入&#10;红烧肉&#10;清炒白菜&#10;番茄蛋汤"></textarea>' +
-    '<div class="row" style="margin-top:10px"><button class="btn primary grow" data-act="batchAdd">批量导入</button></div>' +
-    '<div class="hint">分类自动识别，识别错了点右边的分类标签自己改。</div></div>';
+  h += '<div class="sect">批量导入到「' + cookCat + '」</div><div class="card">' +
+    '<textarea id="ckbatch" placeholder="一行一道菜，粘贴进来&#10;红烧肉&#10;清炒白菜"></textarea>' +
+    '<div class="row" style="margin-top:10px"><button class="btn primary grow" data-act="ckBatchAdd">批量导入</button></div>' +
+    '<div class="hint">这里导入的菜会直接归入「' + cookCat + '」分类。</div></div>';
 
-  h += '<div class="sect">单条新增</div><div class="card"><div class="row">' +
-    '<input id="single" type="text" placeholder="输入一道菜名" class="grow" />' +
-    '<button class="btn primary" data-act="singleAdd">添加</button></div></div>';
+  h += '<div class="sect">单条新增到「' + cookCat + '」</div><div class="card"><div class="row">' +
+    '<input id="cksingle" type="text" placeholder="输入一道菜名" class="grow" />' +
+    '<button class="btn primary" data-act="ckSingleAdd">添加</button></div></div>';
 
-  const exN = S.main.filter(x=>x.ex).length;
-  h += '<div class="sect">菜谱库 · ' + S.main.length + ' 道</div><div class="card" style="padding:10px 12px">';
-  h += '<div class="toolbar"><span class="ttl">' + (sel.size ? '已选 ' + sel.size + ' 道' : (exMode ? '点菜名临时排除' : '点方框可多选')) + '</span>' +
+  const arr = S.main.filter(x=>x.cat===cookCat);
+  const exN = arr.filter(x=>x.ex).length;
+  h += '<div class="sect">' + cookCat + ' · ' + arr.length + ' 道</div><div class="card" style="padding:10px 12px">';
+  h += '<div class="toolbar"><span class="ttl">' + (sel.size?'已选 '+sel.size+' 道':(exMode?'点菜名临时排除':'点方框可多选')) + '</span>' +
     '<span class="grow"></span>' +
+    (arr.length?'<button class="pill" data-act="selAllCat">全选</button>':'') +
     '<button class="pill ' + (exMode||exN?'on':'') + '" data-act="exMode">临时排除' + (exN?' '+exN:'') + '</button>' +
     '<button class="pill danger ' + (sel.size?'on':'') + '" data-act="bulkDel">批量删除</button></div>';
   if(exMode) h += '<div class="hint" style="margin:0 0 8px">临时排除只影响这一轮随机，不删库；再点一次菜名可恢复。</div>';
 
-  if(!S.main.length) h += empty('还没有菜，先在上面粘贴导入');
-  else CATS.forEach(c=>{
-    const arr = S.main.filter(x=>x.cat===c);
-    if(!arr.length) return;
-    h += '<div class="grp">' + c + ' · ' + arr.length + '</div>';
-    arr.forEach(x=>{
-      h += '<div class="ritem">' +
-        '<span class="cb ' + (sel.has(x.id)?'on':'') + '" data-act="selOne" data-id="' + x.id + '">' + (sel.has(x.id)?ICO.check:'') + '</span>' +
-        '<span class="nm ' + (x.ex?'ex ':'') + (exMode?'tap':'') + '" ' + (exMode?'data-act="exOne" data-id="'+x.id+'"':'') + '>' + esc(x.name) + '</span>' +
-        (x.ex && !exMode ? '<span class="tag plain">已排除</span>' : '') +
-        '<select class="catsel" data-id="' + x.id + '">' + CATS.map(c2=>'<option ' + (c2===x.cat?'selected':'') + '>' + c2 + '</option>').join('') + '</select>' +
-        '<button class="mini" data-act="delOne" data-id="' + x.id + '">' + ICO.trash + '</button></div>';
-    });
+  if(!arr.length) h += empty('这个分类还没菜，上面导入或新增');
+  else arr.forEach(x=>{
+    h += '<div class="ritem">' +
+      '<span class="cb ' + (sel.has(x.id)?'on':'') + '" data-act="selOne" data-id="' + x.id + '">' + (sel.has(x.id)?ICO.check:'') + '</span>' +
+      '<span class="nm ' + (x.ex?'ex ':'') + (exMode?'tap':'') + '" ' + (exMode?'data-act="exOne" data-id="'+x.id+'"':'') + '>' + esc(x.name) + '</span>' +
+      (x.ex && !exMode ? '<span class="tag plain">已排除</span>' : '') +
+      '<button class="mini" data-act="editDish" data-id="' + x.id + '" title="编辑">' + ICO.pen + '</button>' +
+      '<button class="mini" data-act="delOne" data-id="' + x.id + '">' + ICO.trash + '</button></div>';
   });
   h += '</div>';
-  $('#v-cook').innerHTML = h;
+  $('#v-cookcat').innerHTML = h;
 }
-function addMain(names){
+function addMain(names, cat){
   const list = names.map(n=>n.trim()).filter(Boolean);
   if(!list.length){ toast('先输入菜名'); return; }
   let n = 0; const added = [];
   list.forEach(name=>{
     if(S.main.some(x=>x.name === name)) return;
-    const it = {id:uid(), name:name, cat:guess(name), ex:false};
+    const it = {id:uid(), name:name, cat:cat || guess(name), ex:false};
     S.main.push(it); added.push(it); n++;
   });
-  if(!save()){ added.forEach(it=>{ const i=S.main.indexOf(it); if(i>=0) S.main.splice(i,1); }); renderCook(); return; }
-  renderCook();
+  if(!save()){ added.forEach(it=>{ const i=S.main.indexOf(it); if(i>=0) S.main.splice(i,1); }); }
+  if(view === 'cookcat') renderCookCat(); else renderCook();
   toast(n ? '导入 ' + n + ' 道' : '都已在库里');
+}
+function openEditDish(id){
+  const it = S.main.find(x=>x.id === id); if(!it) return;
+  editDish = {id:id, name:it.name, cat:it.cat};
+  drawEditDish();
+  $('#sheet').classList.add('on');
+}
+function drawEditDish(){
+  let h = '<div style="display:flex;align-items:center;margin-bottom:12px"><b style="font-size:15px">编辑菜品</b>' +
+    '<span class="grow"></span><button class="pill" data-act="closeSheet">关闭</button></div>';
+  h += '<div class="lbl">菜名</div><input id="dName" type="text" class="grow" value="' + esc(editDish.name) + '" style="margin-bottom:11px" />';
+  h += '<div class="lbl">分类</div><select id="dCat" class="catsel" style="max-width:none;width:100%;margin-bottom:12px">' +
+    CATS.map(c=>'<option ' + (c===editDish.cat?'selected':'') + '>' + c + '</option>').join('') + '</select>';
+  h += '<div class="row"><button class="btn grow" data-act="closeSheet">取消</button>' +
+    '<button class="btn primary grow" data-act="saveDish">保存</button></div>';
+  h += '<button class="btn danger" style="width:100%;margin-top:9px" data-act="delDish" data-id="' + editDish.id + '">删除这道菜</button>';
+  $('#sheetInner').innerHTML = h;
+}
+function saveDish(){
+  const it = S.main.find(x=>x.id===editDish.id);
+  if(it){
+    const nm = ($('#dName').value||'').trim();
+    if(nm) it.name = nm;
+    it.cat = $('#dCat').value;
+    save();
+  }
+  closeSheet(); renderCookCat(); toast('已保存');
+}
+function delDish(){
+  if(!confirm('删除这道菜？')) return;
+  S.main = S.main.filter(x=>x.id!==editDish.id); sel.delete(editDish.id); save();
+  closeSheet(); renderCookCat(); toast('已删除');
 }
 
 /* ========== 2. 生成入口 ========== */
@@ -415,13 +525,13 @@ function renderGen(){
     '<span style="width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:' + tileBg(0) + '">' + ICO.cook + '</span>' +
     '<div class="grow"><div class="et">正餐</div><div class="es">普通随机 · 大锅菜 · 冰箱临时抽取</div></div>' +
     '<span class="ttl">进入</span></div>' +
-    (lastM ? '<div class="hint">上次：' + fmtDay(lastM.ts) + ' · ' + (lastM.mode==='pot'?'大锅菜':'普通') + ' · ' + lastM.items.length + ' 样</div>' : '') +
+    (lastM ? '<div class="hint">上次：' + fmtDay(lastM.ts) + ' · ' + (lastM.mode==='pot'?'大锅菜':STATE_LABEL[lastM.state]||'普通') + ' · ' + lastM.items.length + ' 样</div>' : '') +
     '</div>';
   h += '<div class="card" style="cursor:pointer" data-act="go" data-v="gbrk"><div class="entry">' +
     '<span style="width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:' + tileBg(1) + '">' + ICO.dice + '</span>' +
-    '<div class="grow"><div class="et">早餐</div><div class="es">食材库 · 强制带上 · 外出概率</div></div>' +
+    '<div class="grow"><div class="et">早餐</div><div class="es">生成 · 专属设置 · 食材管理</div></div>' +
     '<span class="ttl">进入</span></div>' +
-    (lastB ? '<div class="hint">上次：' + fmtDay(lastB.ts) + (lastB.out ? ' · 外出/外卖' : ' · ' + lastB.items.length + ' 样') + '</div>' : '') +
+    (lastB ? '<div class="hint">上次：' + fmtDay(lastB.ts) + (lastB.state&&lastB.state!=='normal' ? ' · '+STATE_LABEL[lastB.state] : ' · ' + lastB.items.length + ' 样') + '</div>' : '') +
     '</div>';
   h += '<div class="sect">库里的状态</div><div class="card"><div class="row">' +
     '<div class="grow"><div class="lbl" style="margin:0">正餐菜谱</div><div class="big">' + S.main.length + ' 道' + (S.main.filter(x=>x.ex).length?'（排除 '+S.main.filter(x=>x.ex).length+'）':'') + '</div></div>' +
@@ -449,9 +559,24 @@ function renderMain(){
   if(exN) h += '<div class="hint">本轮已临时排除 ' + exN + ' 道，点这里 <button class="pill" data-act="clearExMain">全部恢复</button></div>';
   h += '</div>';
 
+  h += '<div class="sect">专属设置</div><div class="card">' +
+    probCard('mProbs', [['out','外出'],['takeout','外卖'],['light','简餐'],['skip','不吃']], '外出 / 外卖 / 不吃：命中即整餐标记该状态，不出具体食物。简餐：自动生成 1 道菜的轻食。') +
+    '</div>';
+
   h += resultHtml(mainRes, 'main');
   h += fridgeHtml();
   $('#v-gmain').innerHTML = h;
+}
+function probCard(key, defs, hint){
+  let h = '<div class="lbl">特殊事件概率</div>';
+  defs.forEach(d=>{
+    const v = S.cfg[key][d[0]];
+    h += '<div class="row" style="margin:11px 0"><div class="grow"><div class="lbl" style="margin:0">' + d[1] + '</div>' +
+      '<input type="range" class="range" data-prob="' + key + '" data-pk="' + d[0] + '" min="0" max="100" value="' + v + '" /></div>' +
+      '<span class="probv" data-pv="' + key + '_' + d[0] + '">' + v + '%</span></div>';
+  });
+  if(hint) h += '<div class="hint">' + hint + '</div>';
+  return h;
 }
 function fridgeHtml(){
   let h = '<div class="sect">冰箱临时抽取</div><div class="card">' +
@@ -467,17 +592,50 @@ function fridgeHtml(){
 }
 function resultHtml(res, type){
   if(!res) return '';
+  const st = res.state || 'normal';
   let h = '<div class="result">';
-  h += '<div class="rh"><span class="rt">' + (type==='main' ? (res.mode==='pot' ? '大锅菜 · 一整餐' : '这一餐') : '早餐') + '</span><span class="rd">' + fmtDay(res.ts) + '</span></div>';
-  if(res.out) h += '<div class="outmsg">今天外出 / 外卖</div>';
+  const title = (type==='main' ? (res.mode==='pot'?'大锅菜 · 一整餐':'这一餐') : '早餐');
+  h += '<div class="rh"><span class="rt">' + title + '</span>';
+  if(st!=='normal') h += '<span class="badge">' + STATE_LABEL[st] + '</span>';
+  h += '<span class="rd">' + fmtDay(res.ts) + '</span></div>';
+  if(st==='out') h += '<div class="outmsg">今天外出</div>';
+  else if(st==='takeout') h += '<div class="outmsg">今天外卖</div>';
+  else if(st==='skip') h += '<div class="outmsg">今天不吃</div>';
+  else if(st==='snack') h += '<div class="outmsg">今天零食</div>';
   else if(!res.items.length) h += '<div class="hint" style="margin:0">没有可用的条目</div>';
   else res.items.forEach(it=>{ h += '<div class="ri"><span class="dot"></span>' + esc(it.name) + '</div>'; });
   h += '<div class="hint">已自动存进历史。</div></div>';
   return h;
 }
+function rollState(P, order){
+  const r = Math.random()*100; let acc = 0;
+  for(const k of order){ acc += (P[k]||0); if(r < acc) return k; }
+  return 'normal';
+}
 function genMain(){
   const pool = S.main.filter(x=>!x.ex);
   if(!pool.length){ toast('库里还没有可用的菜'); return; }
+  const st = rollState(S.cfg.mProbs, ['out','takeout','light','skip']);
+  const L = STATE_LABEL;
+  if(st === 'light'){
+    const dishes = pool.filter(x=>x.cat!=='大锅菜' && SOUPS.indexOf(x.cat)<0);
+    if(!dishes.length){ toast('库里还没有可用的菜'); return; }
+    let items=[];
+    for(let i=0;i<40;i++){
+      const pick = sample(dishes, Math.min(1, dishes.length)).map(x=>x.name);
+      if(!same(pick, S.cfg.lastMain)){ items=pick; break; }
+      items=pick;
+    }
+    S.cfg.lastMain = items;
+    mainRes = {state:'light', mode:'normal', ts:Date.now(), items:items.map(n=>({name:n}))};
+    S.hist.unshift({id:uid(), type:'main', ts:mainRes.ts, items:mainRes.items, state:'light', mode:'normal'});
+    save(); renderMain(); toast('简餐生成好了'); return;
+  }
+  if(st !== 'normal'){
+    mainRes = {state:st, mode:mainMode, ts:Date.now(), items:[]};
+    S.hist.unshift({id:uid(), type:'main', ts:mainRes.ts, items:[], state:st, mode:mainMode});
+    save(); renderMain(); toast('这次'+L[st]); return;
+  }
   let items = [], mode = mainMode;
   if(mode === 'pot'){
     const pots = pool.filter(x=>x.cat === '大锅菜');
@@ -495,10 +653,9 @@ function genMain(){
       items = pick.map(n=>({name:n}));
     }
   }
-  const names = items.map(i=>i.name);
-  S.cfg.lastMain = names;
-  mainRes = {mode:mode, ts:Date.now(), items:items, out:false};
-  S.hist.unshift({id:uid(), type:'main', ts:mainRes.ts, items:items, mode:mode});
+  S.cfg.lastMain = items.map(i=>i.name);
+  mainRes = {state:'normal', mode:mode, ts:Date.now(), items:items};
+  S.hist.unshift({id:uid(), type:'main', ts:mainRes.ts, items:items, state:'normal', mode:mode});
   save(); renderMain(); toast('生成好了');
 }
 function genFridge(){
@@ -511,63 +668,75 @@ function genFridge(){
   const ta2 = $('#fridge'); if(ta2){ ta2.value = v; }
 }
 
-/* ========== 4. 早餐 ========== */
+/* ========== 4. 早餐（两层） ========== */
 let brkN = 3;
 function renderBrk(){
   const exN = S.brk.filter(x=>x.ex).length;
-  let h = '<div class="sect">早餐食材库 · ' + S.brk.length + ' 样</div><div class="card">' +
+  let h = '<div class="sect">生成</div><div class="card">' +
+    '<div class="lbl">主食挑几样</div>' +
+    '<div class="stepper"><button data-act="bn" data-d="-1">−</button><span class="v" id="bnv">' + brkN + '</span><button data-act="bn" data-d="1">+</button></div>' +
+    '<button class="btn primary" style="width:100%;margin-top:13px" data-act="genBrk">生成早餐</button>' +
+    (exN?'<div class="hint" style="margin-top:8px">本轮已临时排除 '+exN+' 样，点这里 <button class="pill" data-act="brkClearEx">全部恢复</button></div>':'') +
+    '</div>';
+
+  h += '<div class="sect">专属设置</div><div class="card">' +
+    '<div class="row" style="justify-content:space-between"><div class="grow"><div class="big">强制带上</div>' +
+    '<div class="hint" style="margin:2px 0 0">打开后这些会额外追加，不占主食名额</div></div>' +
+    '<label class="sw"><input type="checkbox" id="fOn" ' + (S.cfg.forceOn?'checked':'') + ' /><span class="tk"></span></label></div>' +
+    '<div style="margin-top:11px"><div class="chipwrap">' +
+    S.cfg.force.map((f,i)=>'<span class="chip">' + esc(f) + '<b data-act="forceDel" data-i="' + i + '">×</b></span>').join('') +
+    '</div><div class="row" style="margin-top:9px"><input id="forceNew" type="text" placeholder="自己加，例如：牛奶 / 煎蛋" class="grow" /><button class="btn sm" data-act="forceAdd">加进去</button></div></div>' +
+    probCard('bProbs', [['out','外出'],['takeout','外卖'],['snack','零食'],['skip','不吃']], '命中即整餐标记为该状态，不出具体食物（外出 / 外卖 / 不吃）；零食为轻食标记。') +
+    '</div>';
+
+  h += '<div class="sect">食材管理</div><div class="card" style="cursor:pointer" data-act="go" data-v="brkman"><div class="entry">' +
+    '<span style="width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:' + tileBg(1) + '">' + ICO.dice + '</span>' +
+    '<div class="grow"><div class="et">管理食材清单</div><div class="es">' + S.brk.length + ' 样 · 增删 / 临时排除</div></div>' +
+    '<span class="ttl">进入</span></div></div>';
+  h += resultHtml(brkRes, 'break');
+  $('#v-gbrk').innerHTML = h;
+}
+function renderBrkMan(){
+  const exN = S.brk.filter(x=>x.ex).length;
+  let h = '<div class="sect">食材库 · ' + S.brk.length + ' 样</div><div class="card">' +
     '<textarea id="bbatch" placeholder="一行一条，批量粘贴&#10;包子&#10;小米粥&#10;油条"></textarea>' +
     '<div class="row" style="margin-top:10px"><button class="btn primary grow" data-act="brkBatch">批量导入</button></div>' +
     '<div class="row" style="margin-top:9px"><input id="bsingle" type="text" placeholder="单条新增" class="grow" /><button class="btn primary" data-act="brkSingle">添加</button></div>' +
     '</div>';
 
   h += '<div class="card" style="padding:10px 12px">';
-  h += '<div class="toolbar"><span class="ttl">' + (bsel.size ? '已选 ' + bsel.size + ' 样' : '点方框可多选') + '</span><span class="grow"></span>' +
-    '<button class="pill ' + (exN?'on':'') + '" data-act="brkClearEx">临时排除' + (exN?' '+exN:'') + '</button>' +
+  h += '<div class="toolbar"><span class="ttl">' + (bsel.size?'已选 '+bsel.size+' 样':(exMode?'点菜名临时排除':'点方框可多选')) + '</span><span class="grow"></span>' +
+    (S.brk.length?'<button class="pill" data-act="brkSelAll">全选</button>':'') +
+    '<button class="pill ' + (exMode||exN?'on':'') + '" data-act="brkExMode">临时排除' + (exN?' '+exN:'') + '</button>' +
     '<button class="pill danger ' + (bsel.size?'on':'') + '" data-act="brkBulkDel">批量删除</button></div>';
+  if(exMode) h += '<div class="hint" style="margin:0 0 8px">临时排除只影响这一轮随机，不删库；再点菜名可恢复。</div>';
   if(!S.brk.length) h += empty('还没有早餐，先在上面导入');
   else S.brk.forEach(x=>{
     h += '<div class="ritem">' +
       '<span class="cb ' + (bsel.has(x.id)?'on':'') + '" data-act="bselOne" data-id="' + x.id + '">' + (bsel.has(x.id)?ICO.check:'') + '</span>' +
-      '<span class="nm ' + (x.ex?'ex':'') + '" data-act="bexOne" data-id="' + x.id + '">' + esc(x.name) + '</span>' +
-      (x.ex ? '<span class="tag plain">已排除</span>' : '') +
+      '<span class="nm ' + (x.ex?'ex':'') + ' ' + (exMode?'tap':'') + '" ' + (exMode?'data-act="bexOne" data-id="'+x.id+'"':'') + '>' + esc(x.name) + '</span>' +
+      (x.ex && !exMode ? '<span class="tag plain">已排除</span>' : '') +
       '<button class="mini" data-act="bdelOne" data-id="' + x.id + '">' + ICO.trash + '</button></div>';
   });
   h += '<div class="hint" style="margin-top:8px">点食材名可临时排除 / 恢复（只影响这一轮）。</div></div>';
-
-  h += '<div class="sect">专属设置</div><div class="card">' +
-    '<div class="row" style="justify-content:space-between"><div class="grow"><div class="big">强制带上</div>' +
-    '<div class="hint" style="margin:2px 0 0">打开的开关后，这些会额外追加，不占主食名额</div></div>' +
-    '<label class="sw"><input type="checkbox" id="fOn" ' + (S.cfg.forceOn?'checked':'') + ' /><span class="tk"></span></label></div>' +
-    '<div style="margin-top:11px"><div class="chipwrap">' +
-    S.cfg.force.map((f,i)=>'<span class="chip">' + esc(f) + '<b data-act="forceDel" data-i="' + i + '">×</b></span>').join('') +
-    '</div><div class="row" style="margin-top:9px"><input id="forceNew" type="text" placeholder="自己加，例如：牛奶 / 煎蛋" class="grow" /><button class="btn sm" data-act="forceAdd">加进去</button></div></div>' +
-    '<hr class="sep" />' +
-    '<div class="lbl">外出 / 外卖概率：<b style="color:var(--acc)">' + S.cfg.outProb + '%</b></div>' +
-    '<input type="range" class="range" id="prob" min="0" max="30" value="' + S.cfg.outProb + '" />' +
-    '<div class="hint">每次生成按概率判定，命中就整餐标记为外出/外卖，不出具体食物。</div></div>';
-
-  h += '<div class="sect">生成</div><div class="card">' +
-    '<div class="lbl">主食挑几样</div>' +
-    '<div class="stepper"><button data-act="bn" data-d="-1">−</button><span class="v" id="bnv">' + brkN + '</span><button data-act="bn" data-d="1">+</button></div>' +
-    '<button class="btn primary" style="width:100%;margin-top:13px" data-act="genBrk">生成早餐</button></div>';
-  h += resultHtml(brkRes, 'break');
-  $('#v-gbrk').innerHTML = h;
+  $('#v-brkman').innerHTML = h;
 }
 function addBrk(names){
   const list = names.map(s=>s.trim()).filter(Boolean);
   if(!list.length){ toast('先输入'); return; }
   let n = 0;
   list.forEach(name=>{ if(S.brk.some(x=>x.name===name)) return; S.brk.push({id:uid(), name:name, ex:false}); n++; });
-  save(); renderBrk(); toast(n ? '导入 ' + n + ' 样' : '都已在库里');
+  save(); renderBrkMan(); toast(n ? '导入 ' + n + ' 样' : '都已在库里');
 }
 function genBrk(){
   const pool = S.brk.filter(x=>!x.ex);
   if(!pool.length && !(S.cfg.forceOn && S.cfg.force.length)){ toast('早餐食材库是空的'); return; }
-  if(S.cfg.outProb > 0 && Math.random()*100 < S.cfg.outProb){
-    brkRes = {out:true, ts:Date.now(), items:[]};
-    S.hist.unshift({id:uid(), type:'break', ts:brkRes.ts, items:[], out:true});
-    save(); renderBrk(); toast('这次外出吃'); return;
+  const st = rollState(S.cfg.bProbs, ['out','takeout','snack','skip']);
+  const L = STATE_LABEL;
+  if(st !== 'normal'){
+    brkRes = {state:st, ts:Date.now(), items:[]};
+    S.hist.unshift({id:uid(), type:'break', ts:brkRes.ts, items:[], state:st});
+    save(); renderBrk(); toast('这次'+L[st]); return;
   }
   let items = [];
   for(let i=0;i<40;i++){
@@ -577,8 +746,8 @@ function genBrk(){
   }
   if(S.cfg.forceOn) S.cfg.force.forEach(f=>{ if(items.indexOf(f) < 0) items.push(f); });
   S.cfg.lastBrk = items.slice();
-  brkRes = {out:false, ts:Date.now(), items:items.map(n=>({name:n}))};
-  S.hist.unshift({id:uid(), type:'break', ts:brkRes.ts, items:brkRes.items, out:false});
+  brkRes = {state:'normal', ts:Date.now(), items:items.map(n=>({name:n}))};
+  S.hist.unshift({id:uid(), type:'break', ts:brkRes.ts, items:brkRes.items, state:'normal'});
   save(); renderBrk(); toast('生成好了');
 }
 
@@ -623,11 +792,17 @@ function renderHist(){
   $('#v-hist').innerHTML = h;
 }
 function recHtml(r){
+  const st = r.state || 'normal';
   let body;
-  if(r.out) body = '<div class="hline" style="color:var(--acc);font-weight:600">外出 / 外卖</div>';
+  if(st==='out') body = '<div class="hline" style="color:var(--acc);font-weight:600">外出</div>';
+  else if(st==='takeout') body = '<div class="hline" style="color:var(--acc);font-weight:600">外卖</div>';
+  else if(st==='skip') body = '<div class="hline" style="color:var(--acc);font-weight:600">不吃</div>';
+  else if(st==='snack') body = '<div class="hline" style="color:var(--acc);font-weight:600">零食</div>';
+  else if(st==='light') body = '<div class="hline" style="color:var(--acc);font-weight:600">简餐</div>';
   else body = r.items.map(i=>esc(i.name)).join(' · ') || '<span class="ttl">（空）</span>';
+  const stateBadge = st!=='normal' ? '<span class="badge">' + STATE_LABEL[st] + '</span>' : '';
   return '<div class="hcard"><div class="hh">' +
-    '<span class="badge">' + (r.type==='main' ? '正餐' : '早餐') + '</span>' +
+    '<span class="badge">' + (r.type==='main' ? '正餐' : '早餐') + '</span>' + stateBadge +
     '<span class="hd">' + fmtDay(r.ts) + (r.type==='main' && r.mode==='pot' ? ' · 大锅菜' : '') + '</span>' +
     '<span class="ha"><button class="mini" data-act="editRec" data-id="' + r.id + '">' + ICO.pen + '</button>' +
     '<button class="mini" data-act="delRec" data-id="' + r.id + '">' + ICO.trash + '</button></span></div>' +
@@ -635,18 +810,21 @@ function recHtml(r){
 }
 function openEdit(id){
   const r = S.hist.find(x=>x.id === id); if(!r) return;
-  editRec = { id:id, items:r.items.map(i=>({name:i.name})), out:!!r.out };
+  editRec = { id:id, items:r.items.map(i=>({name:i.name})), state:r.state||'normal' };
   drawEdit();
   $('#sheet').classList.add('on');
 }
 function drawEdit(){
   const r = S.hist.find(x=>x.id === editRec.id);
+  const st = r ? (r.state||'normal') : 'normal';
+  const defs = (r && r.type==='break')
+    ? [['normal','正常'],['out','外出'],['takeout','外卖'],['snack','零食'],['skip','不吃']]
+    : [['normal','正常'],['out','外出'],['takeout','外卖'],['light','简餐'],['skip','不吃']];
   let h = '<div style="display:flex;align-items:center;margin-bottom:12px"><b style="font-size:15px">编辑记录</b>' +
     '<span class="ttl" style="margin-left:8px">' + (r ? fmtDay(r.ts) : '') + '</span>' +
     '<span class="grow"></span><button class="pill" data-act="closeSheet">关闭</button></div>';
-  if(editRec.out){ h += '<div class="hint" style="margin:0 0 10px">这条是「外出 / 外卖」，要改成具体吃了什么就关掉下面这个开关。</div>' +
-    '<label class="row" style="gap:10px"><span class="sw"><input type="checkbox" id="eOut" checked /><span class="tk"></span></span><span>标记为外出 / 外卖</span></label>'; }
-  else h += '<label class="row" style="gap:10px;margin-bottom:10px"><span class="sw"><input type="checkbox" id="eOut" /><span class="tk"></span></span><span>标记为外出 / 外卖</span></label>';
+  h += '<div class="lbl">特殊状态</div><select id="eState" class="catsel" style="max-width:none;width:100%;margin-bottom:11px">' +
+    defs.map(o=>'<option value="'+o[0]+'" '+(o[0]===st?'selected':'')+'>'+o[1]+'</option>').join('') + '</select>';
   h += '<div class="lbl">吃了什么（可直接改名字）</div>';
   if(!editRec.items.length) h += '<div class="hint" style="margin:0 0 8px">还没有条目</div>';
   editRec.items.forEach((it,i)=>{
@@ -660,7 +838,7 @@ function drawEdit(){
   h += '<button class="btn danger" style="width:100%;margin-top:9px" data-act="delRec" data-id="' + editRec.id + '">删除这整条</button>';
   $('#sheetInner').innerHTML = h;
 }
-function closeSheet(){ $('#sheet').classList.remove('on'); editRec = null; }
+function closeSheet(){ $('#sheet').classList.remove('on'); editRec = null; editDish = null; }
 
 /* ========== 6. 设置 ========== */
 function renderSet(){
@@ -682,10 +860,13 @@ function renderSet(){
     '<div class="hint">深色版是同一套色系的低饱和夜间配色，不是简单反色。</div></div>';
 
   const hasBg = !!localStorage.getItem('w2e_bg_' + t.id);
+  const opv = Math.round((typeof S.cfg.bgOpacity==='number'?S.cfg.bgOpacity:1)*100);
   h += '<div class="sect">背景图（可选）</div><div class="card">' +
     '<div class="hint" style="margin:0 0 10px">给「' + t.n + '」这套主题单独配一张背景图，只存在你自己手机上。图片会压缩后保存，背景上会自动加毛玻璃保证文字看得清。</div>' +
     '<div class="row"><button class="btn grow" data-act="pickBg">' + (hasBg?'换一张':'选一张图') + '</button>' +
     (hasBg ? '<button class="btn grow" data-act="rmBg">移除背景</button>' : '') + '</div>' +
+    (hasBg ? '<div class="lbl" style="margin-top:12px">背景透明度：<b style="color:var(--acc)" id="bgOpv">' + opv + '%</b></div>' +
+      '<input type="range" class="range" id="bgOp" min="0" max="100" value="' + opv + '" />' : '') +
     '<div class="hint">支持相册里的任意图片。参考图里的角色是版权作品，我不会内置，但只要你自己上传，应用只作为你个人的壁纸显示。</div></div>';
 
   h += '<div class="sect">数据备份</div><div class="card">' +
@@ -746,42 +927,50 @@ function importText(txt){
 }
 
 /* ========== 事件 ========== */
+function el0(){ return document.activeElement && document.activeElement.dataset ? document.activeElement : (document.querySelector('[data-act]') || {}); }
 document.addEventListener('click', e=>{
   const el = e.target.closest('[data-act]');
   if(!el) return;
   const act = el.dataset.act, id = el.dataset.id;
   const A = {
     go(){ go(el.dataset.v); },
-    batchAdd(){ addMain(($('#batch').value||'').split('\n')); $('#batch').value=''; },
-    singleAdd(){ const i=$('#single'); addMain([i.value]); i.value=''; },
-    selOne(){ sel.has(id) ? sel.delete(id) : sel.add(id); renderCook(); },
-    exOne(){ const it=S.main.find(x=>x.id===id); if(it){ it.ex=!it.ex; save(); renderCook(); } },
-    exMode(){ exMode=!exMode; renderCook(); },
-    clearExMain(){ S.main.forEach(x=>x.ex=false); save(); renderMain(); toast('已全部恢复'); },
+    openCat(){ openCat(el); },
+    selOne(){ sel.has(id) ? sel.delete(id) : sel.add(id); renderCookCat(); },
+    exOne(){ const it=S.main.find(x=>x.id===id); if(it){ it.ex=!it.ex; save(); renderCookCat(); } },
+    exMode(){ exMode=!exMode; renderCookCat(); },
+    selAllCat(){ const arr=S.main.filter(x=>x.cat===cookCat); if(sel.size>=arr.length) arr.forEach(x=>sel.delete(x.id)); else arr.forEach(x=>sel.add(x.id)); renderCookCat(); },
     bulkDel(){
       if(!sel.size){ toast('先勾选要删的菜'); return; }
       if(!confirm('删除选中的 ' + sel.size + ' 道菜？删了就没了。')) return;
-      S.main = S.main.filter(x=>!sel.has(x.id)); sel.clear(); save(); renderCook(); toast('已删除');
+      S.main = S.main.filter(x=>!sel.has(x.id)); sel.clear(); save(); renderCookCat(); toast('已删除');
     },
     delOne(){
       if(!confirm('删除这道菜？')) return;
-      S.main = S.main.filter(x=>x.id!==id); sel.delete(id); save(); renderCook();
+      S.main = S.main.filter(x=>x.id!==id); sel.delete(id); save(); renderCookCat();
     },
+    ckBatchAdd(){ addMain(($('#ckbatch').value||'').split('\n'), cookCat); $('#ckbatch').value=''; },
+    ckSingleAdd(){ const i=$('#cksingle'); addMain([i.value], cookCat); i.value=''; },
+    editDish(){ openEditDish(id); },
+    saveDish(){ saveDish(); },
+    delDish(){ delDish(); },
+    clearExMain(){ S.main.forEach(x=>x.ex=false); save(); renderMain(); toast('已全部恢复'); },
     dn(){ dishN = Math.max(0, Math.min(20, dishN + (+el.dataset.d))); $('#dnv').textContent = dishN; },
     sn(){ soupN = Math.max(0, Math.min(10, soupN + (+el.dataset.d))); $('#snv').textContent = soupN; },
     genMain(){ genMain(); },
     fridgeGo(){ genFridge(); },
     brkBatch(){ addBrk(($('#bbatch').value||'').split('\n')); $('#bbatch').value=''; },
     brkSingle(){ const i=$('#bsingle'); addBrk([i.value]); i.value=''; },
-    bselOne(){ bsel.has(id) ? bsel.delete(id) : bsel.add(id); renderBrk(); },
-    bexOne(){ const it=S.brk.find(x=>x.id===id); if(it){ it.ex=!it.ex; save(); renderBrk(); } },
+    bselOne(){ bsel.has(id) ? bsel.delete(id) : bsel.add(id); renderBrkMan(); },
+    bexOne(){ const it=S.brk.find(x=>x.id===id); if(it){ it.ex=!it.ex; save(); renderBrkMan(); } },
+    brkExMode(){ exMode=!exMode; renderBrkMan(); },
+    brkSelAll(){ if(!S.brk.length) return; if(bsel.size>=S.brk.length) bsel.clear(); else S.brk.forEach(x=>bsel.add(x.id)); renderBrkMan(); },
     brkClearEx(){ S.brk.forEach(x=>x.ex=false); save(); renderBrk(); toast('已全部恢复'); },
     brkBulkDel(){
       if(!bsel.size){ toast('先勾选要删的'); return; }
       if(!confirm('删除选中的 ' + bsel.size + ' 样？')) return;
-      S.brk = S.brk.filter(x=>!bsel.has(x.id)); bsel.clear(); save(); renderBrk(); toast('已删除');
+      S.brk = S.brk.filter(x=>!bsel.has(x.id)); bsel.clear(); save(); renderBrkMan(); toast('已删除');
     },
-    bdelOne(){ if(!confirm('删除这一样？')) return; S.brk = S.brk.filter(x=>x.id!==id); bsel.delete(id); save(); renderBrk(); },
+    bdelOne(){ if(!confirm('删除这一样？')) return; S.brk = S.brk.filter(x=>x.id!==id); bsel.delete(id); save(); renderBrkMan(); },
     forceDel(){ S.cfg.force.splice(+el.dataset.i, 1); save(); renderBrk(); },
     forceAdd(){ const i=$('#forceNew'); const v=(i.value||'').trim(); if(!v){ toast('先输入内容'); return; } if(S.cfg.force.indexOf(v)<0) S.cfg.force.push(v); i.value=''; save(); renderBrk(); },
     bn(){ brkN = Math.max(0, Math.min(20, brkN + (+el.dataset.d))); $('#bnv').textContent = brkN; },
@@ -794,13 +983,14 @@ document.addEventListener('click', e=>{
     editDel(){ editRec.items.splice(+el.dataset.i,1); drawEdit(); },
     editAdd(){ const i=$('#eNew'); const v=(i.value||'').trim(); if(!v) return; editRec.items.push({name:v}); drawEdit(); },
     saveEdit(){
-      const box = $('#sheetInner');
-      box.querySelectorAll('[data-ei]').forEach(inp=>{ const i=+inp.dataset.ei; if(editRec.items[i]) editRec.items[i].name = inp.value.trim() || editRec.items[i].name; });
-      const o = $('#eOut');
       const r = S.hist.find(x=>x.id===editRec.id);
       if(r){
-        r.out = o ? o.checked : false;
-        r.items = r.out ? [] : editRec.items.filter(i=>i.name);
+        r.state = $('#eState') ? $('#eState').value : 'normal';
+        if(r.state === 'normal'){
+          const box = $('#sheetInner');
+          box.querySelectorAll('[data-ei]').forEach(inp=>{ const i=+inp.dataset.ei; if(editRec.items[i]) editRec.items[i].name = inp.value.trim() || editRec.items[i].name; });
+          r.items = editRec.items.filter(i=>i.name);
+        } else { r.items = []; }
         save();
       }
       closeSheet(); renderHist(); toast('已保存');
@@ -812,9 +1002,14 @@ document.addEventListener('click', e=>{
     expGo(){ $('#expBox').value = exportText(); toast('备份文本已生成'); },
     expCopy(){
       const b = $('#expBox'); if(!b.value) b.value = exportText();
-      b.select();
-      try{ document.execCommand('copy'); toast('已复制'); }
-      catch(e){ try{ navigator.clipboard.writeText(b.value); toast('已复制'); }catch(e2){ toast('请长按文本框全选复制'); } }
+      b.focus(); b.select();
+      try{ if(b.setSelectionRange) b.setSelectionRange(0, b.value.length); }catch(e){}
+      const done = ()=> toast('已复制');
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(b.value).then(done).catch(()=>{ try{ document.execCommand('copy'); done(); }catch(e2){ toast('请长按文本框全选复制'); } });
+      } else {
+        try{ document.execCommand('copy'); done(); }catch(e){ toast('请长按文本框全选复制'); }
+      }
     },
     impGo(){
       const o = importText($('#impBox').value);
@@ -829,16 +1024,23 @@ document.addEventListener('click', e=>{
   if(A[act]){ e.preventDefault(); A[act](); }
 });
 document.addEventListener('change', e=>{
-  const sel2 = e.target.closest('.catsel');
-  if(sel2){ const it = S.main.find(x=>x.id === sel2.dataset.id); if(it){ it.cat = sel2.value; save(); toast('已改为' + sel2.value); } return; }
   if(e.target.id === 'fOn'){ S.cfg.forceOn = e.target.checked; save(); }
-  if(e.target.id === 'prob'){ S.cfg.outProb = +e.target.value; save(); const l = e.target.previousElementSibling; renderBrk(); }
 });
 document.addEventListener('input', e=>{
-  if(e.target.id === 'prob'){
-    S.cfg.outProb = +e.target.value;
-    const lbl = document.querySelector('#v-gbrk .lbl b');
-    if(lbl) lbl.textContent = S.cfg.outProb + '%';
+  if(e.target.id === 'cookSearch'){ cookSearch = e.target.value; renderCookResults(); return; }
+  if(e.target.id === 'bgOp'){
+    const v = +e.target.value/100; S.cfg.bgOpacity = v; save();
+    const bl = $('#bgLayer'); if(bl) bl.style.opacity = v;
+    const lbl = $('#bgOpv'); if(lbl) lbl.textContent = e.target.value + '%';
+    return;
+  }
+  const pr = e.target.closest('[data-prob]');
+  if(pr){
+    const key = pr.dataset.prob, pk = pr.dataset.pk, v = +pr.value;
+    S.cfg[key][pk] = v; save();
+    const lbl = document.querySelector('[data-pv="' + key + '_' + pk + '"]');
+    if(lbl) lbl.textContent = v + '%';
+    return;
   }
 });
 document.addEventListener('click', e=>{
@@ -850,15 +1052,16 @@ document.addEventListener('click', e=>{
   if(md){ S.cfg.mode = md.dataset.md; dark = resolveDark(); save(); applyTheme(); renderSet(); }
 });
 $('#setBtn').addEventListener('click', ()=>go('set'));
-$('#backBtn').addEventListener('click', ()=>go('gen'));
+$('#backBtn').addEventListener('click', ()=>go($('#backBtn').dataset.back || 'gen'));
 $('#sheet').addEventListener('click', e=>{ if(e.target.id === 'sheet') closeSheet(); });
 
 /* ========== 启动 ========== */
 dark = resolveDark();
 applyTheme();
 go('cook');
+save();
 if(!S.main.length && !S.brk.length && !S.hist.length){
-  toast('先到「菜谱」粘贴导入你家的菜');
+  toast('先到「菜谱」分类里导入你家的菜');
 }
 
 /* 添加到主屏幕 / 离线缓存：仅 http(s) 环境注册 SW，file:// 直接打开不注册 */
